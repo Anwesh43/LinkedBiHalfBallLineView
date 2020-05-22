@@ -11,17 +11,55 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.RectF
 
 val nodes : Int = 5
 val parts : Int = 3
 val scGap : Float = 0.02f / parts
+val arcs : Int = 2
 val strokeFactor : Float = 90f
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#4CAF50")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val delay : Long = 20
+val deg : Float = -90f
+val rFactor : Float = 3f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawBiHalfUpLine(i : Int, scale : Float, w : Float, size : Float, paint : Paint) {
+    val sf : Float = scale.sinify()
+    val sf1 : Float = sf.divideScale(0, parts)
+    val sf2 : Float = sf.divideScale(1, parts)
+    val sf3 : Float = sf.divideScale(2, parts)
+    val r : Float = size / rFactor
+    save()
+    scale(1f - 2 * i, 1f)
+    translate(-w / 2 + (w / 2) * sf1, 0f)
+    rotate(90f * sf3)
+    drawLine(0f, 0f, 0f, -size * sf2, paint)
+    save()
+    translate(0f, -size * sf2)
+    drawArc(RectF(-r, -r, r, r), 90f, 180f, true, paint)
+    restore()
+    restore()
+}
+
+fun Canvas.drawBHULNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    paint.color = foreColor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    save()
+    translate(w / 2, gap * (i + 1))
+    for (j in 0..(arcs - 1)) {
+        drawBiHalfUpLine(i, scale, w, size, paint)
+    }
+    restore()
+}
