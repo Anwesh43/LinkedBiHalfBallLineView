@@ -217,4 +217,13 @@ class BiHalfBallUpLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : BiHalfBallUpLineView {
+            val view : BiHalfBallUpLineView = BiHalfBallUpLineView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
