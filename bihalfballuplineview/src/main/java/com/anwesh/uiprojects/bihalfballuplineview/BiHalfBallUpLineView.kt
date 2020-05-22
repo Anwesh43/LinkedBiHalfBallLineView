@@ -39,7 +39,7 @@ fun Canvas.drawBiHalfUpLine(i : Int, scale : Float, w : Float, size : Float, pai
     save()
     scale(1f - 2 * i, 1f)
     translate(-w / 2 + (w / 2) * sf1, 0f)
-    rotate(90f * sf3)
+    rotate(deg * sf3)
     drawLine(0f, 0f, 0f, -size * sf2, paint)
     save()
     translate(0f, -size * sf2)
@@ -66,14 +66,16 @@ fun Canvas.drawBHULNode(i : Int, scale : Float, paint : Paint) {
 
 class BiHalfBallUpLineView(ctx : Context) : View(ctx) {
 
-    override fun onDraw(canvas : Canvas) {
+    private val renderer : Renderer = Renderer(this)
 
+    override fun onDraw(canvas : Canvas) {
+        renderer.render(canvas)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-
+                renderer.handleTap()
             }
         }
         return true
