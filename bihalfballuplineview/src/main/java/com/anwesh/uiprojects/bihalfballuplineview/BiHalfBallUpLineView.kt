@@ -192,4 +192,27 @@ class BiHalfBallUpLineView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : BiHalfBallUpLineView) {
+
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private val animator : Animator = Animator(view)
+        private val bhul : BiHalfArcLine = BiHalfArcLine(0)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            bhul.draw(canvas, paint)
+            animator.animate {
+                bhul.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            bhul.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
