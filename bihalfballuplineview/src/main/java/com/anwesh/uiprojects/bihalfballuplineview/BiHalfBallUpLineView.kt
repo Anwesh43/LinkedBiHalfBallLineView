@@ -21,8 +21,8 @@ val strokeFactor : Float = 90f
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#4CAF50")
 val backColor : Int = Color.parseColor("#BDBDBD")
-val delay : Long = 20
-val deg : Float = -90f
+val delay : Long = 10
+val deg : Float = -75f
 val rFactor : Float = 3f
 
 fun Int.inverse() : Float = 1f / this
@@ -38,12 +38,14 @@ fun Canvas.drawBiHalfUpLine(i : Int, scale : Float, w : Float, size : Float, pai
     val r : Float = size / rFactor
     save()
     scale(1f - 2 * i, 1f)
-    translate(-w / 2 + (w / 2) * sf1, 0f)
+    translate(-w / 2, r)
+    drawRect(RectF(0f, 0f, (w / 2) * sf1, 2 * r), paint)
+    translate(r + (w / 2 - r) * sf1, 0f)
     rotate(deg * sf3)
     drawLine(0f, 0f, 0f, -size * sf2, paint)
     save()
     translate(0f, -size * sf2)
-    drawArc(RectF(-r, -r, r, r), 90f, 180f, true, paint)
+    drawArc(RectF(-r, -2 * r, r, 0f), 90f, 180f, true, paint)
     restore()
     restore()
 }
@@ -59,7 +61,7 @@ fun Canvas.drawBHULNode(i : Int, scale : Float, paint : Paint) {
     save()
     translate(w / 2, gap * (i + 1))
     for (j in 0..(arcs - 1)) {
-        drawBiHalfUpLine(i, scale, w, size, paint)
+        drawBiHalfUpLine(j, scale, w, size, paint)
     }
     restore()
 }
